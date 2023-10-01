@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+{% block style %}
+* {
+  box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+.form {
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+}
+{% endblock %}
+{% block javascript %}
+function convertFormToJSON(form) {
+  const array = $(form).serializeArray(); // Encodes the set of form elements as an array of names and values.
+  const json = {};
+  $.each(array, function () {
+    json[this.name] = this.value || "";
+  });
+  return json;
+}
+$(document).ready(function(){
+        $("#feature_form").submit(function(e) {
+                e.preventDefault();
+		var formData = convertFormToJSON($("#feature_form"));
+		$.ajax({
+                    type: "POST",
+		    url: "/video/{{id}}/feature",
+		    data: JSON.stringify(formData),
+                    success: function(data){console.log(data)},
+                    error: function(data){console.log(data)},
+                    dataType: "json",
+                    contentType : "application/json"
+                });
+	});
+	$("#feature").click(function(event) {
+            if ($(this).is(":checked"))
+                $("#form-div").show();
+            else
+                $("#form-div").hide();
+        });
+})
+{% endblock %}
+{% block content %}
+<div id="controls">
+	 <ul style="background: #ccc">
+		<li style="float:right"><a href="{{delete}}">Delete Video</a></li>
+	</ul>
+		<h1>{% block title %}Video Player{% endblock %}</h1>
+		<video width="70%" controls style="display:block; margin: 0 auto">
+		<source src="{{path}}" type="video/mp4"></source>
+		</video>
+
+		<div class="form">
+		<div style="float: right">
+		<label>Feature</label>
+		<input type="checkbox" id="feature" {{"checked" if is_featured else ""}}/>
+		</div>
+		<div  id="form-div" style="display:{{"block" if is_featured else "none"}}">
+		    <form action="" id="feature_form">
+			<label>Title</label>
+			<input type="text" name="title" id="title" value="{{feature["title"]}}"></input>
+			<label>Expires</label>
+			<input type="date" name="expires" id="expires" value="{{feature["expires"]}}"></input><br />
+			<label>Description</label>
+			<textarea name="description" id="description">{{feature["description"]}}</textarea>
+			<input type="submit"></input>
+		    <form>
+		</div>
+		</div>
+
+{% endblock %}

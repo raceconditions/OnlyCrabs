@@ -1,0 +1,115 @@
+{% extends 'layout.html' %}
+{% block style %}
+    <style type="text/css">
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      background-color: #f1f1f1;
+      font-family: Arial;
+    }
+    
+    /* Center website */
+    .main {
+      margin: auto;
+    }
+    
+    h1 {
+      word-break: break-all;
+    }
+    
+    .row {
+      margin: 8px auto;
+    }
+    
+    /* Add padding BETWEEN each column */
+    .row,
+    .row > .column {
+      padding: 6px;
+    }
+    
+    /* Create four equal columns that floats next to each other */
+    .column {
+      float: left;
+      width: 14.5%;
+    }
+    
+    /* Clear floats after rows */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    
+    /* Content */
+    .content {
+      background-color: white;
+      padding: 10px;
+    }
+    
+    span.active {
+      font-weight: bold;
+    }
+    
+    /* Responsive layout - makes a three column-layout instead of six columns */
+    @media screen and (max-width: 900px) {
+      .column {
+        width: 31%;
+      }
+    }
+    
+    /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 600px) {
+      .column {
+        width: 46%;
+      }
+    }
+{% endblock %}
+{% block javascript %}
+		var items = []
+		var lastElement
+		function rotate(element, i) {
+			if(lastElement != undefined) {
+				clearTimeout(items[lastElement])
+				delete items[lastElement]
+			}
+			lastElement = element
+			thumbs = eval(element.getAttribute("thumbs"))
+			folder = element.getAttribute("folder")
+			element.src= folder + "/" + thumbs[i]
+			if(i+1 < thumbs.length)
+				next = i+1
+			else
+				next = 0
+			t = setTimeout(function(){rotate(element, next)}, 500)
+			items[element] = t
+		}
+
+                function stop(element) {
+                        clearTimeout(items[element])
+		}
+{% endblock %}
+{% block content %}
+    <h1>{% block title %}Video Gallery{% endblock %}</h1>
+    {%- for row in videos|batch(6) %}
+      <div class="row">
+      {%- for video in row %}
+        <div class="column">
+          <div class="content">
+            <a href="{{url_for('.play_video', id=video.id)}}">
+		    <img src="{{video['folder']}}/{{video['thumbs'][0]}}" alt="Thumb" thumbs="{{video['thumbs']}}" folder="{{video['folder']}}" onmouseenter="rotate(this, 0)" ontouchstart="rotate(this, 0)" style="width:100%">
+            </a>
+	    <h4>{{video['camera_name']}}</h4>
+	    <i>{{video['timestamp'].strftime("%Y-%m-%d %I:%M%p")}}</i><br />
+	    <b>Duration:</b> {{video['duration']}}<br />
+	    <b>Size:</b> {{video['size']}}
+          </div>
+        </div>
+      {%- endfor %}
+      </div>
+    {%- endfor %}
+    {%- for page in pages %}
+       <span class="{{"active" if page == current else "inactive"}}"><a href="{{url_for('.video_gallery', page=page)}}">{{page}}</a></span>
+    {%- endfor %}
+{% endblock %}

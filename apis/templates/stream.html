@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>{% block title %}{{title}}{% endblock %}</h2>
+<div style="height: 80vh;">
+<video id="hls-vid" poster="{{"/snapshot/{}.jpg".format(title.lower().replace(" ","-"))}}" class="video-js vjs-default-skin vjs-fill" controls>
+		    <source src="{{stream}}" type="application/x-mpegURL" />
+                    <!-- fallback -->
+                </video>
+</div>
+                <script src="https://unpkg.com/video.js/dist/video.js"></script>
+		<script>
+                    var player = videojs('hls-vid');
+                </script>
+{% endblock %}

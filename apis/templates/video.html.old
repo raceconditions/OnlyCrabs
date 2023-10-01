@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block content %}
+		<h1>{% block title %}Video Player{% endblock %}</h1>
+		<b>{{(', '.join(video.objects)).title() + " on " + video.camera}}</b> <i>({{video.date.strftime("%Y-%m-%d %I:%M%p")}})</i> - <b>Duration:</b> {{video.duration}} - <b>Size:</b> {{video.size}}<br /><br />
+		<video width="70%" controls style="display:block; margin: 0 auto">
+		<source src="{{path}}" type="video/mp4"></source>
+		</video>
+		<a href="{{delete}}">Delete Video</a>
+{% endblock %}

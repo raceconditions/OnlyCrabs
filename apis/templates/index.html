@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block style %}
+.circular--square { width: 90%; max-width: 225px; height: auto; border-radius: 50%;}
+/* container */
+.responsive-three-columns {
+    display:flex;
+    flex-wrap:wrap;
+}
+
+/* columns */
+.responsive-three-columns > * {
+    width:100%;
+}
+
+/* tablet breakpoint */
+@media (min-width:768px) {
+    .responsive-three-columns > * {
+        width:calc(100% / 3);
+    }
+}
+
+{% endblock %}
+{% block content %}
+<div class="main" style="text-align: center">
+    <img src="/static/OnlyCrabs_Logo2.png" style="max-width:500px; width:100%; height:auto" />
+    <h1>Welcome to OnlyCrabs</h1>
+    <p>OnlyCrabs is a social platform revolutionizing crab and fan connections, where hermit crabs can offer exclusive content to their target audience.</p>
+    <h2>Meet Our Crabs</h2>
+    <div class="responsive-three-columns">
+        <div class="column">
+    	    <h3>Mikkel</h3><img class="circular--square" src="/static/20230906_191741.jpg" /><br /><i>&nbsp;</i>
+        </div>
+        <div class="column">
+    	    <h3>Mikey</h3><img class="circular--square" src="/static/20230906_210800.jpg" /><br /><i>&nbsp;</i>
+        </div>
+        <div class="column">
+    	    <h3>Mike</h3><img class="circular--square" src="/static/20230906_210823.jpg" /><br /><i>&nbsp;</i>
+        </div>
+        <div class="column">
+    	    <h3>Michelle</h3><img class="circular--square" src="/static/20230906_210839.jpg" /><br /><i>&nbsp;</i>
+        </div>
+        <div class="column">
+	    <h3>Not Mike</h3><img class="circular--square" src="/static/20230906_210850.jpg" /><br /><i>&nbsp;</i>
+        </div>
+        <div class="column">
+	    <h3>Other Mike</h3><img class="circular--square" src="/static/other_mike.png" /><br /><i>(Not a Crab)</i>
+        </div>
+    </div>
+</div>
+{% endblock %}
